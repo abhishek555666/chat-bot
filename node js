@@ -1,0 +1,37 @@
+function sendUnansweredQuestion(question) {
+    fetch('http://localhost:3000/unanswered-questions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        console.log('Question saved successfully');
+    })
+    .catch(error => {
+        console.error('There was a problem saving the question:', error);
+    });
+}
+
+function respondToUser(input) {
+    // Define your keyword patterns and corresponding responses
+    const keywords = [
+        // Your keyword patterns and responses here...
+    ];
+
+    // Check if any keyword pattern matches the user input
+    for (const keyword of keywords) {
+        if (keyword.pattern.test(input)) {
+            sendTextMessage(keyword.response);
+            return;
+        }
+    }
+
+    // If no keyword matches, save the unanswered question
+    sendUnansweredQuestion(input);
+    sendTextMessage("Hey I couldn't catch you...😢<br>Send 'help' to know more about usage.");
+}
